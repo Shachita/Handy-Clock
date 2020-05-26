@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        html {
+            background: black;
+            background-size: cover;
+            font-family: 'helvetica neue';
+            text-align: center;
+            font-size: 10px;
+        }
+        
+        body {
+            margin: 0;
+            font-size: 2rem;
+            display: flex;
+            flex: 1;
+            min-height: 100vh;
+            align-items: center;
+        }
+        
+        .analog {
+            width: 30rem;
+            height: 30rem;
+            border: 20px solid white;
+            border-radius: 50%;
+            position: relative;
+            margin-left: 750px;
+            padding: 2rem;
+            box-shadow: 0 0 20px 2px rgba(255, 0, 0, 1);
+        }
+        
+        .digital {
+            width: 40rem;
+            height: 27.5rem;
+            border: 5px solid white;
+            position: absolute;
+            margin-left: 770px;
+            padding: 2rem;
+            box-shadow: 0 0 20px 2px rgba(255, 0, 0, 1);
+        }
+        
+        .vis {
+            visibility: hidden;
+        }
+        
+        .clock-face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform: translateY(-3px);
+            /* account for the height of the clock hands */
+        }
+        
+        .hand {
+            background: cornsilk;
+            width: 50%;
+            height: 6px;
+            position: absolute;
+            top: 50%;
+            transform-origin: 100%;
+            transform: rotate(90deg);
+            /* box-shadow: 0 0 2px 0.5px rgba(255, 0, 0, 1);*/
+            transition: all 0.05s;
+            transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+        }
+        
+        h2 {
+            color: cornsilk;
+            margin-left: 100px;
+            font-size: 40px;
+            position: absolute;
+            top: 40px;
+        }
+        
+        .footer {
+            position: absolute;
+            color: cornsilk;
+            bottom: 0;
+            left: 0;
+        }
+        
+        .hour-hand {
+            width: 40%;
+            height: 8px;
+            top: 50%;
+            left: 10.2%;
+        }
+        
+        .min-hand {
+            width: 46%;
+            height: 6px;
+            top: 50%;
+            left: 4%;
+        }
+        
+        .sec-hand {
+            height: 4px;
+            top: 50%;
+            left: 0.8%;
+        }
+        
+        .select {
+            position: absolute;
+            top: 150px;
+            margin-left: 245px;
+        }
+        
+        button {
+            display: block;
+            background-color: darkturquoise;
+            box-shadow: 0 0 12px 1px rgba(255, 0, 0, 1);
+            width: 150px;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            height: 100px;
+            margin-top: 90px;
+            border-radius: 50px;
+        }
+        
+        button:focus {
+            background-color: pink;
+            cursor: pointer;
+        }
+        
+        .day {
+            color: cornsilk;
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .time,
+        .date {
+            color: cornsilk;
+            font-size: 4rem;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h2>Choose Your Clock!! ⏰</h2>
+
+    <div class="select">
+        <button onclick="change('Analog')">Analog
+        </button>
+        <button onclick="change('Digital')">
+        Digital 
+        </button>
+
+    </div>
+    <div class="analog">
+        <div class="clock-face">
+            <div class="hand hour-hand"></div>
+            <div class="hand min-hand"></div>
+            <div class="hand sec-hand"></div>
+        </div>
+    </div>
+    <div class="footer">
+        Created by @ShachitaJain! 🙂
+    </div>
+    <div class="digital">
+        <div class="day"></div>
+        <hr>
+        <div class="time ">
+            <span class="hour"></span> : <span class="minutes"></span> : <span class="seconds"></span> : <span class="milli"></span>
+        </div>
+        <hr>
+
+        <div class="date ">
+            <span class="month"></span> <span class="datein"></span> , <span class="year"></span>
+        </div>
+
+
+    </div>
+    <script>
+        const secHand = document.querySelector('.sec-hand');
+        const minHand = document.querySelector('.min-hand');
+        const hourHand = document.querySelector('.hour-hand');
+        const ana = document.querySelector('.analog');
+        const digi = document.querySelector('.digital');
+        const day = document.querySelector('.day');
+        const hour = document.querySelector('.hour');
+        const min = document.querySelector('.minutes');
+        const sec = document.querySelector('.seconds');
+        const milli = document.querySelector('.milli');
+        const mon = document.querySelector('.month');
+        const d = document.querySelector('.datein');
+        const year = document.querySelector('.year');
+
+
+        ana.classList.add('vis');
+        digi.classList.add('vis');
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thusrday', 'Friday', 'Saturday'];
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+
+        function change(type) {
+            if (type === 'Analog') {
+                ana.classList.remove('vis');
+                digi.classList.add('vis');
+
+            } else if (type === 'Digital') {
+                digi.classList.remove('vis');
+                ana.classList.add('vis');
+
+
+
+
+
+            }
+        }
+
+
+
+
+
+
+        function setDate() {
+            const date = new Date();
+
+            const seconds = date.getSeconds();
+            const secDegree = ((seconds / 60) * 360) + 90;
+            secHand.style.transform = `rotate(${secDegree}deg)`;
+            const mins = date.getMinutes();
+            const minDegree = ((mins / 60) * 360) + 90;
+            minHand.style.transform = `rotate(${minDegree}deg)`;
+            const hours = date.getHours();
+            const hourDegree = ((hours / 12) * 360) + 90;
+            hourHand.style.transform = `rotate(${hourDegree}deg)`;
+            day.textContent = days[date.getDay()];
+            hour.textContent = hours;
+            min.textContent = mins;
+            sec.textContent = seconds;
+            milli.textContent = date.getMilliseconds();
+            mon.textContent = months[date.getMonth()];
+            d.textContent = date.getDate();
+            year.textContent = date.getFullYear();
+
+
+
+
+
+
+
+
+        }
+        setInterval(setDate, 1000);
+    </script>
+</body>
+
+</html>
